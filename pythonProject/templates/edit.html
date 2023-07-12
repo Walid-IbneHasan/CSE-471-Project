@@ -33,7 +33,7 @@
       <form
         name="sentMessage"
         id="contactForm"
-        action="/edit/{{sno}}"
+        action="/edit"
         method="post"
         novalidate
       >
@@ -48,7 +48,7 @@
               name="title"
               required
               data-validation-required-message="Please enter your name."
-              value="{{post.title}}"
+
             />
             <p class="help-block text-danger"></p>
           </div>
@@ -64,7 +64,7 @@
               name="tline"
               required
               data-validation-required-message="Please enter your email address."
-              value="{{post.tagline}}"
+
             />
             <p class="help-block text-danger"></p>
           </div>
@@ -80,7 +80,7 @@
               id="slug"
               required
               data-validation-required-message="Please enter your phone number."
-              value="{{post.slug}}"
+
             />
             <p class="help-block text-danger"></p>
           </div>
@@ -97,7 +97,7 @@
               required
               data-validation-required-message="Please enter a message."
             >
-{{post.content}}</textarea
+</textarea
             >
             <p class="help-block text-danger"></p>
           </div>
@@ -111,7 +111,7 @@
               placeholder="Image Filename"
               name="img_file"
               id="img_file"
-              value="{{post.img_file}}"
+
             />
             <p class="help-block text-danger"></p>
           </div>

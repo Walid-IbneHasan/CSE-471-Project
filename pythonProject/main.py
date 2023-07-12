@@ -7,6 +7,9 @@ import os
 import math
 from datetime import datetime
 import MySQLdb
+import pymysql
+
+
 
 
 with open('config.json', 'r') as c:
@@ -84,29 +87,25 @@ def home():
 
 
     return render_template('index.html', params=params, posts=posts, prev=prev, next=next)
-
-@app.route("/signup",methods=['GET','POST'])
+@app.route('/signup', methods=['GET', 'POST'])
 def signup():
     if request.method == 'POST':
+        # Fetch form data
+        name = request.form['name']
+        email = request.form['email']
+        password = request.form['password']
 
-            name = request.form.get('name')
-            email = request.form.get('email')
-            password = request.form.get('password')
+        # Create a new User instance
+        user = User(name=name, email=email, password=password)
 
+        # Add the User to the database
+        db.session.add(user)
+        db.session.commit()
 
-            existing_user = User.query.filter_by(email=email).first()
-            if existing_user:
-                print ("Email already exists. Please choose a different email!")
-            else:
-                entry = User(name=name,  password=password, email=email)
-                db.session.add(entry)
-                db.session.commit()
+        return render_template('login.html')
 
-                print('added')
-                return redirect(url_for('login'))
-
-            # Render the signup form template for GET requests
     return render_template('signup.html')
+
 
 @app.route("/post/<string:post_slug>", methods=['GET'])
 def post_route(post_slug):
@@ -139,67 +138,72 @@ def login():
         # print(user)
         if user==None:
             return redirect(url_for('login'))
+        # elif   user==params['admin_user']:
+        #     return redirect('/dashboard')
+        #     # return render_template('dashboard.html', params=params, posts = posts)
         else:
+            # #modified
+            # return redirect(url_for('home'))
 
             if user[2]=='team9@gmail.com':
+                # return render_template("dashboard.html")
                 return redirect(url_for('dashboard'))
             else:
+                # return render_template("index.html")
 
                 return redirect(url_for('home'))
 
-
-
-    return render_template('login.html', params=params)
+    else:
+        return render_template('login.html', params=params)
 
 @app.route("/dashboard", methods=['GET', 'POST'])
 def dashboard():
 
-    if ('user' in session and session['user'] == params['admin_user']):
-        posts = Posts.query.all()
-        return render_template('dashboard.html', params=params, posts = posts)
-
-
+    # if ('user' in session and session['user'] == params['admin_user']):
+    #     posts = Posts.query.all()
+    #     return render_template('dashboard.html', params=params, posts = posts)
+    #
+    #
     if request.method=='POST':
-        username = request.form.get('uname')
-        userpass = request.form.get('pass')
 
-        if (username == params['admin_user'] and userpass == params['admin_password']):
-            #set the session variable
-            session['user'] = username
-            posts = Posts.query.all()
-            return render_template('dashboard.html', params=params, posts = posts)
-   
+        print("hellow")
+    #
+    #     if (username == params['admin_user'] and userpass == params['admin_password']):
+    #         #set the session variable
+    #         session['user'] = username
+    #         posts = Posts.query.all()
+    #         return render_template('dashboard.html', params=params, posts = posts)
+    conn = MySQLdb.connect(host='localhost', user='root', passwd='', db='codingthunder')
+    cursor = conn.cursor()
+    # Query execute
+    cursor.execute('SELECT * FROM posts')
+    # Matched row in 'user'
+    user = cursor.fetchall()
+    # print(user)
 
-    return render_template('login.html', params=params)
+    return render_template('dashboard.html', user=user)
 
 
-@app.route("/edit/<string:sno>", methods = ['GET', 'POST'])
-def edit(sno):
-    if ('user' in session and session['user'] == params['admin_user']):
-        if request.method == 'POST':
-            box_title = request.form.get('title')
-            tline = request.form.get('tline')
-            slug = request.form.get('slug')
-            content = request.form.get('content')
-            img_file = request.form.get('img_file')
-            date = datetime.now()
 
-            if sno=='0':
-                post = Posts(title=box_title, slug=slug, content=content, tagline=tline, img_file=img_file, date=date)
-                db.session.add(post)
-                db.session.commit()
-            else:
-                post = Posts.query.filter_by(sno=sno).first()
-                post.title = box_title
-                post.slug = slug
-                post.content = content
-                post.tagline = tline
-                post.img_file = img_file
-                post.date = date
-                db.session.commit()
-                return redirect('/edit/'+sno)
-        post = Posts.query.filter_by(sno=sno).first()
-        return render_template('edit.html', params=params, post=post, sno=sno)
+@app.route("/edit", methods = ['GET', 'POST'])
+def edit():
+    title = request.form.get('title')
+    tline = request.form.get('tline')
+    slug = request.form.get('slug')
+    content = request.form.get('content')
+    img_file = request.form.get('img_file')
+
+    user = Posts.query.filter_by(slug=slug).first()
+
+    if user:
+        user.title = request.form.get('title')
+        user.tagline = request.form.get('tline')
+        user.slug = request.form.get('slug')
+        user.content = request.form.get('content')
+        user.img_file = request.form.get('img_file')
+        db.session.commit()
+
+    return render_template('edit.html')
 
 
 @app.route("/uploader", methods = ['GET', 'POST'])
