@@ -40,6 +40,8 @@
         <th>Sno</th>
         <th>Title</th>
         <th>Date</th>
+          <th>Slug</th>
+
         <th>Edit</th>
         <th>Delete</th>
       </tr>
@@ -52,6 +54,7 @@
         <td class='row-{{loop.index}}' >{{post[0]}}</td>
         <td class='row-{{loop.index}}'>{{post[1]}}</td>
         <td class='row-{{loop.index}}'>{{post[2]}}</td>
+          <td class='row-{{loop.index}}'>{{post[3]}}</td>
         <td class='row-{{loop.index}}'><a href="/edit"><button  class="btn btn-primary" >Edit</button></a></td>
         <td class='row-{{loop.index}}'><a href="/delete"><button  class="btn btn-primary">Delete</button></a></td>
       </tr>
