@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Admin Panel</title>
+</head>
+<body>
+    <h1>Admin Panel</h1>
+    <h2>Add Doctor</h2>
+    <form action="/admin" method="POST">
+        <label for="name">Name:</label>
+        <input type="text" id="name" name="name" required><br><br>
+        <label for="specialization">Specialization:</label>
+        <input type="text" id="specialization" name="specialization" required><br><br>
+        <input type="submit" value="Add Doctor">
+    </form>
+
+    <h2>Doctors</h2>
+    <ul>
+        {% for doctor in doctors %}
+        <li>
+            <h3>{{ doctor.name }}</h3>
+            <p>Specialization: {{ doctor.specialization }}</p>
+            <form action="/delete/{{ doctor.id }}" method="POST">
+                <input type="submit" value="Delete">
+            </form>
+        </li>
+        {% endfor %}
+    </ul>
+</body>
+</html>

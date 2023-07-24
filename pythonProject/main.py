@@ -221,13 +221,7 @@ def logout():
     session.pop('user')
     return redirect('/dashboard')
 
-@app.route("/delete/<string:sno>", methods = ['GET', 'POST'])
-def delete(sno):
-    if ('user' in session and session['user'] == params['admin_user']):
-        post = Posts.query.filter_by(sno=sno).first()
-        db.session.delete(post)
-        db.session.commit()
-    return redirect('/dashboard')
+
 
 
 
@@ -248,5 +242,38 @@ def contact():
                           )
     return render_template('contact.html', params=params)
 
+@app.route("/delete", methods = ['GET', 'POST'])
+def delete():
+
+    slug = request.form.get('slug')
+
+    user = Posts.query.filter_by(slug=slug).first()
+    print(user)
+    if user:
+        db.session.delete(user)
+        db.session.commit()
+
+    return render_template('delete.html')
+@app.route("/add", methods = ['GET', 'POST'])
+def add():
+    if request.method == 'POST':
+
+        title = request.form.get('title')
+        tagline = request.form.get('tline')
+        slug = request.form.get('slug')
+        content = request.form.get('content')
+        img_file=request.form.get('img_file')
+        date=request.form.get('date')
+
+        entry = Posts( title=title, tagline=tagline, slug=slug, content=content,img_file=img_file,date=date)
+        db.session.add(entry)
+        db.session.commit()
+
+
+    return render_template('add.html')
+
+
 
 app.run(debug=True)
+
+

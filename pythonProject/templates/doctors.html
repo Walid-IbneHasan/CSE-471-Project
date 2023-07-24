@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Available Doctors</title>
+</head>
+<body>
+    <h1>Available Doctors</h1>
+    <ul>
+        {% for doctor in doctors %}
+        <li>
+            <h3>{{ doctor.name }}</h3>
+            <p>Specialization: {{ doctor.specialization }}</p>
+            <ul>
+                {% for appointment in doctor.appointments %}
+                <li>{{ appointment.timeslot.strftime('%Y-%m-%d %H:%M') }}</li>
+                {% endfor %}
+            </ul>
+        </li>
+        {% endfor %}
+    </ul>
+</body>
+</html>
