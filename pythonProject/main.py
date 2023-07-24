@@ -59,6 +59,14 @@ class User(db.Model):
     email = db.Column(db.String(120), nullable=False)
     password = db.Column(db.String(120), nullable=False)
 
+
+class Doctor(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(120), nullable=False)
+    specialty = db.Column(db.String(120), nullable=False)
+    availability = db.Column(db.String(120), nullable=False)
+
+
 @app.route("/")
 @app.route("/home")
 
@@ -248,7 +256,7 @@ def delete():
     slug = request.form.get('slug')
 
     user = Posts.query.filter_by(slug=slug).first()
-    print(user)
+    # print(user)
     if user:
         db.session.delete(user)
         db.session.commit()
@@ -271,6 +279,37 @@ def add():
 
 
     return render_template('add.html')
+
+
+
+
+
+
+#...................................................
+@app.route("/doctors", methods=['GET'])
+def doctors():
+    doctors = Doctor.query.all()
+    return render_template('doctors.html', doctors=doctors)
+
+@app.route("/search_doctors", methods=['GET'])
+def search_doctors():
+    name = request.args.get('name')
+    specialty = request.args.get('specialty')
+    availability = request.args.get('availability')
+
+    query = Doctor.query
+
+    if name:
+        query = query.filter(Doctor.name.like(f"%{name}%"))
+    if specialty:
+        query = query.filter(Doctor.specialty.like(f"%{specialty}%"))
+    if availability:
+        query = query.filter(Doctor.availability.like(f"%{availability}%"))
+
+    doctors = query.all()
+
+    return render_template('doctors.html', doctors=doctors)
+
 
 
 

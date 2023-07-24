@@ -22,16 +22,9 @@
           <h1>Basic Actions</h1>
           
            <a href="/add">  <button class="btn btn-primary"> Add a new post</button></a>
-           <a href="/logout">  <button class="btn btn-primary"> Logout</button></a>
+           
 <hr>
-          <h1>Upload A File</h1>
-          
-            <form action="/uploader" method="post" enctype="multipart/form-data">
-              
-<input type="file" name="file1">
-<button type="submit" class="btn btn-primary">Submit</button>
-
-            </form>
+         
           <hr>
 <h1>Edit Posts</h1>
 <table class="table">
@@ -42,8 +35,8 @@
         <th>Date</th>
           <th>Slug</th>
 
-        <th>Edit</th>
-        <th>Delete</th>
+          <th ><a href="/edit"><button  class="btn btn-primary" >Edit</button></a></th>
+          <th ><a href="/delete"><button  class="btn btn-primary">Delete</button></a></th>
       </tr>
     </thead>
     <tbody>
@@ -55,8 +48,7 @@
         <td class='row-{{loop.index}}'>{{post[1]}}</td>
         <td class='row-{{loop.index}}'>{{post[2]}}</td>
           <td class='row-{{loop.index}}'>{{post[3]}}</td>
-        <td class='row-{{loop.index}}'><a href="/edit"><button  class="btn btn-primary" >Edit</button></a></td>
-        <td class='row-{{loop.index}}'><a href="/delete"><button  class="btn btn-primary">Delete</button></a></td>
+        
       </tr>
       
 

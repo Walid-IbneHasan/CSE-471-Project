@@ -31,7 +31,7 @@ a {
 }
 
 a:focus, a:hover {
-  color: #0085A1;
+  color: #ff0000;
 }
 
 blockquote {
@@ -58,13 +58,13 @@ blockquote {
 
 ::-moz-selection {
   color: #fff;
-  background: #0085A1;
+  background: #f14d4d;
   text-shadow: none;
 }
 
 ::selection {
   color: #fff;
-  background: #0085A1;
+  background: #f14d4d;
   text-shadow: none;
 }
 
@@ -153,13 +153,13 @@ img::-moz-selection {
     color: #212529;
   }
   #mainNav.is-fixed .navbar-brand:focus, #mainNav.is-fixed .navbar-brand:hover {
-    color: #0085A1;
+    color: #f14d4d;
   }
   #mainNav.is-fixed .navbar-nav > li.nav-item > a {
     color: #212529;
   }
   #mainNav.is-fixed .navbar-nav > li.nav-item > a:focus, #mainNav.is-fixed .navbar-nav > li.nav-item > a:hover {
-    color: #0085A1;
+    color: #f14d4d;
   }
   #mainNav.is-visible {
     /* if the user changes the scrolling direction, we show the header */
