@@ -32,14 +32,14 @@
       rel="stylesheet"
       type="text/css"
     />
+    <link
+      href="{{url_for('static',filename='css/doctors.css')}}"
+      rel="stylesheet"
+    />
 
     <!-- Custom styles for this template -->
     <link
       href="{{ url_for('static', filename='css/clean-blog.min.css') }}"
-      rel="stylesheet"
-    />
-    <link
-      href="{{url_for('static',filename='css/doctors.css')}}"
       rel="stylesheet"
     />
   </head>
@@ -68,7 +68,7 @@
               <a class="nav-link" href="/">Home</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="/doctors"> Available Doctors</a>
+              <a class="nav-link" href="/dashboard/doctors"> Available Doctors</a>
             </li>
 
             <li class="nav-item">
@@ -77,11 +77,11 @@
             <li class="nav-item">
               <a class="nav-link" href="/login">Log (In/Out) </a>
             </li>
+            
           </ul>
         </div>
       </div>
     </nav>
-
     <header
       class="masthead"
       style="background-image: url('{{ url_for('static', filename='img/surgery-1807541.jpg') }}')"
@@ -102,60 +102,52 @@
         </div>
       </div>
     </header>
-    <div class="container">
-      <h1>Available Doctors</h1>
-      <form action="{{ url_for('search_doctors') }}" method="GET">
-        <div class="form-group">
-          <label for="name">Doctor Name:</label>
-          <input
-            type="text"
-            class="form-control"
-            id="name"
-            name="name"
-            placeholder="Enter doctor name"
-          />
-        </div>
-        <div class="form-group">
-          <label for="specialty">Specialty:</label>
-          <input
-            type="text"
-            class="form-control"
-            id="specialty"
-            name="specialty"
-            placeholder="Enter specialty"
-          />
-        </div>
-        <div class="form-group">
-          <label for="availability">Availability:</label>
-          <input
-            type="text"
-            class="form-control"
-            id="availability"
-            name="availability"
-            placeholder="Enter availability"
-          />
-        </div>
+<body>
+    <section class="admin_section">
+    <h1>Admin Panel - Manage Doctors</h1>
+    <a href="{{ url_for('doctors') }}">Back to Doctors</a>
 
-        <button type="submit" class="btn btn-primary">Search</button>
-      </form>
+    <!-- Add Doctor Form -->
+    <h2>Add Doctor</h2>
+    <form action="{{ url_for('add_doctor') }}" method="POST">
+        <div class="form-group">
+            <label for="name">Doctor Name:</label>
+            <input type="text" class="form-control" id="name" name="name" required>
+        </div>
+        <div class="form-group">
+            <label for="specialty">Specialty:</label>
+            <input type="text" class="form-control" id="specialty" name="specialty" required>
+        </div>
+        <div class="form-group">
+            <label for="availability">Availability:</label>
+            <input type="text" class="form-control" id="availability" name="availability" required>
+        </div>
+        <button type="submit" class="btn btn-primary">Add Doctor</button>
+    </form>
 
-      <br />
-      <h2>Doctors List</h2>
-      <ul class='ul_doc'>
+    <!-- Doctors List -->
+    <br>
+    <h2>Doctors List</h2>
+    <table>
+        <tr class="table_row">
+            <th>Name</th>
+            <th>Specialty</th>
+            <th>Availability</th>
+            <th>Actions</th>
+        </tr>
         {% for doctor in doctors %}
-        <div class="doctor-grid">
-        <div class="doctor-card">
-          <p class="doctor-name">{{ doctor.name }}</p>
-          <p class="doctor-specialty">Specialty: {{ doctor.specialty }}</p>
-          <p class="doctor-availability">
-            Availability: {{ doctor.availability }}
-          </p>
-        </div>
-      </div>
+        <tr class="table_row">
+            <td >{{ doctor.name }}</td>
+            <td>{{ doctor.specialty }}</td>
+            <td>{{ doctor.availability }}</td>
+            <td>
+                <a class='cust_btn' href="{{ url_for('edit_doctor', id=doctor.id) }}">Edit</a>
+                <a class='cust_btn' href="{{ url_for('delete_doctor', id=doctor.id) }}">Delete</a>
+            </td>
+        </tr>
         {% endfor %}
-      </ul>
-    </div>
-
+    </table>
+</section>
     <hr />
     <!-- Footer -->
     <footer>
@@ -180,10 +172,7 @@
                 </a>
               </li>
               <li class="list-inline-item">
-                <a
-                  href="https://github.com/Walid-IbneHasan/CSE-471-Project"
-                  target="_blank"
-                >
+                <a href="https://github.com/Walid-IbneHasan/CSE-471-Project" target="_blank">
                   <span class="fa-stack fa-lg">
                     <i class="fa fa-circle fa-stack-2x"></i>
                     <i class="fa fa-github fa-stack-1x fa-inverse"></i>
@@ -200,8 +189,10 @@
     <!-- Bootstrap core JavaScript -->
     <script src="{{ url_for('static', filename='vendor/jquery/jquery.min.js') }}"></script>
     <script src="{{ url_for('static', filename='vendor/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
+    
 
     <!-- Custom scripts for this template -->
     <script src="{{ url_for('static', filename='js/clean-blog.min.js') }}"></script>
-  </body>
+
+</body>
 </html>

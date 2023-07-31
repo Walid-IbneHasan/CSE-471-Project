@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, session, redirect,url_for
+from flask import Flask, render_template, request, session, redirect, url_for,flash
 from flask_sqlalchemy import SQLAlchemy
 from werkzeug.utils import secure_filename
 from flask_mail import Mail
@@ -10,8 +10,6 @@ import MySQLdb
 import pymysql
 
 
-
-
 with open('config.json', 'r') as c:
     params = json.load(c)["params"]
 
@@ -20,14 +18,14 @@ app = Flask(__name__)
 app.secret_key = 'super-secret-key'
 app.config['UPLOAD_FOLDER'] = params['upload_location']
 app.config.update(
-    MAIL_SERVER = 'smtp.gmail.com',
-    MAIL_PORT = '465',
-    MAIL_USE_SSL = True,
-    MAIL_USERNAME = params['gmail-user'],
-    MAIL_PASSWORD=  params['gmail-password']
+    MAIL_SERVER='smtp.gmail.com',
+    MAIL_PORT='465',
+    MAIL_USE_SSL=True,
+    MAIL_USERNAME=params['gmail-user'],
+    MAIL_PASSWORD=params['gmail-password']
 )
 mail = Mail(app)
-if(local_server):
+if (local_server):
     app.config['SQLALCHEMY_DATABASE_URI'] = params['local_uri']
 else:
     app.config['SQLALCHEMY_DATABASE_URI'] = params['prod_uri']
@@ -53,6 +51,7 @@ class Posts(db.Model):
     date = db.Column(db.String(12), nullable=True)
     img_file = db.Column(db.String(12), nullable=True)
 
+
 class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(120), nullable=False)
@@ -69,32 +68,32 @@ class Doctor(db.Model):
 
 @app.route("/")
 @app.route("/home")
-
 def home():
     posts = Posts.query.filter_by().all()
     last = math.ceil(len(posts)/int(params['no_of_posts']))
-    #[0: params['no_of_posts']]
-    #posts = posts[]
+    # [0: params['no_of_posts']]
+    # posts = posts[]
     page = request.args.get('page')
-    if(not str(page).isnumeric()):
+    if (not str(page).isnumeric()):
         page = 1
-    page= int(page)
-    posts = posts[(page-1)*int(params['no_of_posts']): (page-1)*int(params['no_of_posts'])+ int(params['no_of_posts'])]
-    #Pagination Logic
-    #First
-    if (page==1):
+    page = int(page)
+    posts = posts[(page-1)*int(params['no_of_posts']): (page-1)
+                  * int(params['no_of_posts']) + int(params['no_of_posts'])]
+    # Pagination Logic
+    # First
+    if (page == 1):
         prev = "#"
-        next = "/?page="+ str(page+1)
-    elif(page==last):
+        next = "/?page=" + str(page+1)
+    elif (page == last):
         prev = "/?page=" + str(page - 1)
         next = "#"
     else:
         prev = "/?page=" + str(page - 1)
         next = "/?page=" + str(page + 1)
 
-
-
     return render_template('index.html', params=params, posts=posts, prev=prev, next=next)
+
+
 @app.route('/signup', methods=['GET', 'POST'])
 def signup():
     if request.method == 'POST':
@@ -121,13 +120,7 @@ def post_route(post_slug):
     return render_template('post.html', params=params, post=post)
 
 
-
-
-@app.route("/about")
-def about():
-    return render_template('about.html', params=params)
-
-@app.route("/login",methods=['GET','POST'])
+@app.route("/login", methods=['GET', 'POST'])
 def login():
 
     if request.method == 'POST':
@@ -136,15 +129,16 @@ def login():
         password = request.form.get('pass')
 
         # Database connect
-        conn = MySQLdb.connect(host='localhost', user='root', passwd='', db='codingthunder')
+        conn = MySQLdb.connect(host='localhost', user='root',
+                               passwd='', db='codingthunder')
         cursor = conn.cursor()
         # Query execute
         cursor.execute('SELECT * FROM user WHERE  `name` = %s AND `password` = %s ',
-                       ( name, password ))
+                       (name, password))
         # Matched row in 'user'
         user = cursor.fetchone()
         # print(user)
-        if user==None:
+        if user == None:
             return redirect(url_for('login'))
         # elif   user==params['admin_user']:
         #     return redirect('/dashboard')
@@ -153,7 +147,7 @@ def login():
             # #modified
             # return redirect(url_for('home'))
 
-            if user[2]=='team9@gmail.com':
+            if user[2] == 'team9@gmail.com':
                 # return render_template("dashboard.html")
                 return redirect(url_for('dashboard'))
             else:
@@ -164,6 +158,7 @@ def login():
     else:
         return render_template('login.html', params=params)
 
+
 @app.route("/dashboard", methods=['GET', 'POST'])
 def dashboard():
 
@@ -172,7 +167,7 @@ def dashboard():
     #     return render_template('dashboard.html', params=params, posts = posts)
     #
     #
-    if request.method=='POST':
+    if request.method == 'POST':
 
         print("hellow")
     #
@@ -181,7 +176,8 @@ def dashboard():
     #         session['user'] = username
     #         posts = Posts.query.all()
     #         return render_template('dashboard.html', params=params, posts = posts)
-    conn = MySQLdb.connect(host='localhost', user='root', passwd='', db='codingthunder')
+    conn = MySQLdb.connect(host='localhost', user='root',
+                           passwd='', db='codingthunder')
     cursor = conn.cursor()
     # Query execute
     cursor.execute('SELECT * FROM posts')
@@ -192,8 +188,7 @@ def dashboard():
     return render_template('dashboard.html', user=user)
 
 
-
-@app.route("/edit", methods = ['GET', 'POST'])
+@app.route("/edit", methods=['GET', 'POST'])
 def edit():
     title = request.form.get('title')
     tline = request.form.get('tline')
@@ -214,14 +209,14 @@ def edit():
     return render_template('edit.html')
 
 
-@app.route("/uploader", methods = ['GET', 'POST'])
+@app.route("/uploader", methods=['GET', 'POST'])
 def uploader():
     if ('user' in session and session['user'] == params['admin_user']):
         if (request.method == 'POST'):
-            f= request.files['file1']
-            f.save(os.path.join(app.config['UPLOAD_FOLDER'], secure_filename(f.filename) ))
+            f = request.files['file1']
+            f.save(os.path.join(
+                app.config['UPLOAD_FOLDER'], secure_filename(f.filename)))
             return "Uploaded successfully"
-
 
 
 @app.route("/logout")
@@ -230,27 +225,26 @@ def logout():
     return redirect('/dashboard')
 
 
-
-
-
-@app.route("/contact", methods = ['GET', 'POST'])
+@app.route("/contact", methods=['GET', 'POST'])
 def contact():
-    if(request.method=='POST'):
+    if (request.method == 'POST'):
         name = request.form.get('name')
         email = request.form.get('email')
         phone = request.form.get('phone')
         message = request.form.get('message')
-        entry = Contacts(name=name, phone_num = phone, msg = message, date= datetime.now(),email = email )
+        entry = Contacts(name=name, phone_num=phone,
+                         msg=message, date=datetime.now(), email=email)
         db.session.add(entry)
         db.session.commit()
         mail.send_message('New message from ' + name,
                           sender=email,
-                          recipients = [params['gmail-user']],
-                          body = message + "\n" + phone
+                          recipients=[params['gmail-user']],
+                          body=message + "\n" + phone
                           )
     return render_template('contact.html', params=params)
 
-@app.route("/delete", methods = ['GET', 'POST'])
+
+@app.route("/delete", methods=['GET', 'POST'])
 def delete():
 
     slug = request.form.get('slug')
@@ -262,7 +256,9 @@ def delete():
         db.session.commit()
 
     return render_template('delete.html')
-@app.route("/add", methods = ['GET', 'POST'])
+
+
+@app.route("/add", methods=['GET', 'POST'])
 def add():
     if request.method == 'POST':
 
@@ -270,26 +266,23 @@ def add():
         tagline = request.form.get('tline')
         slug = request.form.get('slug')
         content = request.form.get('content')
-        img_file=request.form.get('img_file')
-        date=request.form.get('date')
+        img_file = request.form.get('img_file')
+        date = request.form.get('date')
 
-        entry = Posts( title=title, tagline=tagline, slug=slug, content=content,img_file=img_file,date=date)
+        entry = Posts(title=title, tagline=tagline, slug=slug,
+                      content=content, img_file=img_file, date=date)
         db.session.add(entry)
         db.session.commit()
-
 
     return render_template('add.html')
 
 
-
-
-
-
-#...................................................
+# ...................................................
 @app.route("/doctors", methods=['GET'])
 def doctors():
     doctors = Doctor.query.all()
     return render_template('doctors.html', doctors=doctors)
+
 
 @app.route("/search_doctors", methods=['GET'])
 def search_doctors():
@@ -311,8 +304,50 @@ def search_doctors():
     return render_template('doctors.html', doctors=doctors)
 
 
+# ..........................................NEW...................................................
+@app.route("/dashboard/doctors", methods=['GET'])
+def admin_doctors():
+    doctors = Doctor.query.all()
+    return render_template('admin_doctors.html', doctors=doctors)
+
+
+@app.route("/dashboard/add_doctor", methods=['POST'])
+def add_doctor():
+    name = request.form['name']
+    specialty = request.form['specialty']
+    availability = request.form['availability']
+
+    new_doctor = Doctor(name=name, specialty=specialty,
+                        availability=availability)
+    db.session.add(new_doctor)
+    db.session.commit()
+
+    flash('Doctor added successfully!', 'success')
+    return redirect(url_for('admin_doctors'))
+
+
+@app.route("/dashboard/edit_doctor/<int:id>", methods=['GET', 'POST'])
+def edit_doctor(id):
+    doctor = Doctor.query.get_or_404(id)
+
+    if request.method == 'POST':
+        doctor.name = request.form['name']
+        doctor.specialty = request.form['specialty']
+        doctor.availability = request.form['availability']
+        db.session.commit()
+        flash('Doctor updated successfully!', 'success')
+        return redirect(url_for('admin_doctors'))
+
+    return render_template('edit_doctor.html', doctor=doctor)
+
+
+@app.route("/dashboard/delete_doctor/<int:id>", methods=['POST'])
+def delete_doctor(id):
+    doctor = Doctor.query.get_or_404(id)
+    db.session.delete(doctor)
+    db.session.commit()
+    flash('Doctor deleted successfully!', 'success')
+    return redirect(url_for('admin_doctors'))
 
 
 app.run(debug=True)
-
-

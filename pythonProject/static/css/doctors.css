@@ -1,0 +1,62 @@
+/* Custom CSS for doctor cards */
+.doctor-card {
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  padding: 15px;
+  margin-bottom: 15px;
+  margin-left: 0;
+}
+
+.doctor-name {
+  font-size: 20px;
+  font-weight: bold;
+}
+
+.doctor-specialty {
+  font-size: 16px;
+  color: #555;
+}
+
+.doctor-availability {
+  font-size: 16px;
+  color: #555;
+}
+.ul_doc {
+  margin-left: 0;
+  padding-left: 0;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}
+.cust_btn {
+  font-size: 14px;
+  font-weight: 800;
+  padding: 15px 25px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  border-radius: 0;
+  font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  background-color: #f14d4d;
+  border-color: #f14d4d;
+  color: white;
+  margin-bottom: 1rem;
+
+}
+.cust_btn:hover{
+    color: white;
+    text-decoration: none;
+}
+.admin_section {
+  padding-left: 10rem;
+  padding-right: 10rem;
+  
+}
+tr{
+    line-height: 4rem;
+}
+td,th{
+   
+}
+table{
+    width: 100%;
+}
