@@ -140,9 +140,12 @@
             <td >{{ doctor.name }}</td>
             <td>{{ doctor.specialty }}</td>
             <td>{{ doctor.availability }}</td>
-            <td>
+            <td class='td_btn'>
                 <a class='cust_btn' href="{{ url_for('edit_doctor', id=doctor.id) }}">Edit</a>
-                <a class='cust_btn' href="{{ url_for('delete_doctor', id=doctor.id) }}">Delete</a>
+                <form action="{{ url_for('delete_doctor', id=doctor.id) }}" method="POST">
+                    <button type="submit" class="cust_btnn">Delete</button>
+                </form>
+                
             </td>
         </tr>
         {% endfor %}

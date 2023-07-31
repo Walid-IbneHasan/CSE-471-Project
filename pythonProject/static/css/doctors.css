@@ -31,7 +31,7 @@
 .cust_btn {
   font-size: 14px;
   font-weight: 800;
-  padding: 15px 25px;
+  padding: 0px 55px;
   letter-spacing: 1px;
   text-transform: uppercase;
   border-radius: 0;
@@ -40,7 +40,23 @@
   border-color: #f14d4d;
   color: white;
   margin-bottom: 1rem;
+  
+  
 
+}
+.cust_btnn{
+    font-size: 14px;
+    font-weight: 800;
+    padding: 0px 55px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    border-radius: 0;
+    font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+    background-color: #f14d4d;
+    border-color: #f14d4d;
+    color: white;
+    margin-bottom: 1rem;
+    
 }
 .cust_btn:hover{
     color: white;
@@ -59,4 +75,8 @@ td,th{
 }
 table{
     width: 100%;
+}
+.td_btn{
+    display: flex;
+    gap: 0.2rem;
 }

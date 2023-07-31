@@ -341,13 +341,14 @@ def edit_doctor(id):
     return render_template('edit_doctor.html', doctor=doctor)
 
 
-@app.route("/dashboard/delete_doctor/<int:id>", methods=['POST'])
+@app.route("/dashboard/delete_doctor/<int:id>", methods=['GET','POST'])
 def delete_doctor(id):
     doctor = Doctor.query.get_or_404(id)
-    db.session.delete(doctor)
-    db.session.commit()
-    flash('Doctor deleted successfully!', 'success')
-    return redirect(url_for('admin_doctors'))
-
+    if request.method=='POST':
+        db.session.delete(doctor)
+        db.session.commit()
+        flash('Doctor deleted successfully!', 'success')
+        return redirect(url_for('admin_doctors'))
+    return render_template('admin_doctors.html', doctors=[doctor])
 
 app.run(debug=True)
